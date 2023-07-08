@@ -23,9 +23,12 @@ export class MailService {
         return response['access_token'];
     }
 
-    async getLetterstoSend() {
+    async getLetterstoSend(token: String) {
         const url = process.env.SERVER_URL+'api/lettersToSend';
-        const requestHeaders = { 'Content-Type': 'application/json' };
+        const requestHeaders = { 
+            'Content-Type': 'application/json', 
+            'Authorization': 'Bearer '+token
+        };
         const response = await this.httpService.get(url, {
             headers: requestHeaders
         }).pipe(map((res) => res.data)).toPromise();
@@ -53,5 +56,6 @@ export class MailService {
         });
 
         console.log("Email enviado para " + to + " ID: ", info.messageId);
+        return "Email enviado para " + to + " ID: "+ info.messageId;
     }
 }
