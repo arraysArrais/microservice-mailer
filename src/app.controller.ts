@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { MailService } from './mail/mail.service';
 
 @Controller()
@@ -9,19 +9,24 @@ export class AppController {
   ) { }
 
   @Get()
-  async mailProcess() {
+  async mailProcess(@Res() res) {
+    let response = [];
+
     try {
       let token = await this.mailService.getTokenFromAppServer();
-      let lettersToSend = await this.mailService.getLetterstoSend();
+      console.log('access token retrieved from server: ', token);
 
-      lettersToSend.forEach(async (e) => {
-        await this.mailService.sendMail(e.recipient_email, e.title, e.content)
-      })
+      let lettersToSend = await this.mailService.getLetterstoSend(token);
+      console.log('Letters to dispatch: ', lettersToSend);
 
-      console.log(token);
-      console.log(lettersToSend);
+      for(const e of lettersToSend){
+        response.push(await this.mailService.sendMail(e.recipient_email, e.title, e.content));
+      }
+
+      res.status(200).json(response);
     }
     catch (error) {
+      res.status(500).json(error);
       console.error(error);
     }
 
