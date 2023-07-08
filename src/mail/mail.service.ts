@@ -8,7 +8,7 @@ export class MailService {
     constructor(private readonly httpService: HttpService) { }
 
     async getTokenFromAppServer() {
-        const url = 'http://localhost:8000/api/auth/login';
+        const url = process.env.SERVER_URL+'api/auth/login';
 
         const requestBody = new URLSearchParams({
             email: process.env.SERVER_USER,
@@ -24,7 +24,7 @@ export class MailService {
     }
 
     async getLetterstoSend() {
-        const url = 'http://localhost:8000/api/lettersToSend';
+        const url = process.env.SERVER_URL+'api/lettersToSend';
         const requestHeaders = { 'Content-Type': 'application/json' };
         const response = await this.httpService.get(url, {
             headers: requestHeaders
