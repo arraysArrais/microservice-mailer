@@ -16,10 +16,10 @@ export class AppController {
       let token = await this.mailService.getTokenFromAppServer();
       console.log('access token retrieved from server: ', token);
 
-      let lettersToSend = await this.mailService.getLetterstoSend(token);
+      let lettersToSend: any = await this.mailService.getLetterstoSend(token);
       console.log('Letters to dispatch: ', lettersToSend);
 
-      for(const e of lettersToSend){
+      for (const e of Object.values(lettersToSend) as any) {
         response.push(await this.mailService.sendMail(e.recipient_email, e.title, e.content));
       }
 
