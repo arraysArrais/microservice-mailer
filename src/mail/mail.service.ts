@@ -8,15 +8,18 @@ export class MailService {
     constructor(private readonly httpService: HttpService) { }
 
     async getTokenFromAppServer() {
-        const url = process.env.SERVER_URL+'api/auth/login';
+        const url = process.env.SERVER_URL + 'api/auth/login';
 
-        const requestBody = new URLSearchParams({
+        const requestBody = {
             email: process.env.SERVER_USER,
             password: process.env.SERVER_PASS,
-        });
-        const requestHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
+        }
+        
+        const requestHeaders = {
+            'Content-Type': 'application/json; charset=utf-8'
+          }
 
-        const response = await this.httpService.post(url, requestBody.toString(), {
+        const response = await this.httpService.post(url, requestBody, {
             headers: requestHeaders
         }).pipe(map((res) => res.data)).toPromise();
 
@@ -24,10 +27,10 @@ export class MailService {
     }
 
     async getLetterstoSend(token: String) {
-        const url = process.env.SERVER_URL+'api/lettersToSend';
-        const requestHeaders = { 
-            'Content-Type': 'application/json', 
-            'Authorization': 'Bearer '+token
+        const url = process.env.SERVER_URL + 'api/dispatch';
+        const requestHeaders = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         };
         const response = await this.httpService.get(url, {
             headers: requestHeaders
@@ -56,6 +59,6 @@ export class MailService {
         });
 
         console.log("Email enviado para " + to + " ID: ", info.messageId);
-        return "Email enviado para " + to + " ID: "+ info.messageId;
+        return "Email enviado para " + to + " ID: " + info.messageId;
     }
 }
