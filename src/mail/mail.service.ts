@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 const nodemailer = require("nodemailer");
 
@@ -7,23 +8,23 @@ const nodemailer = require("nodemailer");
 export class MailService {
     constructor(private readonly httpService: HttpService) { }
 
-    async getTokenFromAppServer() {
-        const url = process.env.SERVER_URL + 'api/auth/login';
+    async getTokenFromAppServer(serverUrl: String, serverUser: String, serverPass: String) {
+        const endpoint = serverUrl + 'api/auth/login';
 
         const requestBody = {
-            email: process.env.SERVER_USER,
-            password: process.env.SERVER_PASS,
+            email: serverUser,
+            password: serverPass,
         }
         
         const requestHeaders = {
             'Content-Type': 'application/json; charset=utf-8'
           }
 
-        const response = await this.httpService.post(url, requestBody, {
+        const response = await lastValueFrom(this.httpService.post(endpoint, requestBody, {
             headers: requestHeaders
-        }).pipe(map((res) => res.data)).toPromise();
+        }));
 
-        return response['access_token'];
+        return response;
     }
 
     async getLetterstoSend(token: String) {
