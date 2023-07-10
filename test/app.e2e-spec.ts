@@ -5,7 +5,7 @@ import { AppController } from '../src/app.controller';
 import { MailModule } from '../src/mail/mail.module';
 import { HttpModule } from '@nestjs/axios';
 import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 
 describe('microservice', () => {
@@ -38,7 +38,6 @@ describe('microservice', () => {
   });
 
   describe('Auth', () => {
-
     it('Request to auth endpoint with wrong credentials should return 401 unauthorized', async () => {
       try {
         var response = await mailService.getTokenFromAppServer(process.env.SERVER_URL, 'teste', process.env.SERVER_PASS);
