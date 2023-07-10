@@ -5,6 +5,13 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+env:
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_PASS: ${{ secrets.SERVER_PASS }}
+        SERVER_URL: ${{ secrets.SERVER_URL }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
 
 jobs:
   build:
@@ -15,7 +22,6 @@ jobs:
       matrix:
         node-version: [18.14]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
@@ -26,3 +32,4 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm run test:e2e
+
