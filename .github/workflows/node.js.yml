@@ -51,7 +51,7 @@ jobs:
     - id: deploy
       uses: google-github-actions/deploy-cloud-functions@v1
       with:
-        name: microservice-mailer-nest
+        name: microservice_mailer_nest
         runtime: nodejs18
         entry_point: microservice_mailer_nest
         memory_mb: 256
