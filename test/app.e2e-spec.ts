@@ -38,31 +38,17 @@ describe('microservice', () => {
   });
 
   describe('Auth', () => {
-    it('Request to auth endpoint with wrong credentials should return 401 unauthorized', async () => {
-      try {
-        var response = await mailService.getTokenFromAppServer(process.env.SERVER_URL, 'teste', process.env.SERVER_PASS);
-      } catch (error) {
-        expect(error.response.status).toBe(401);
-        expect(error.response.statusText).toBe('Unauthorized');
-        expect(error.response.data).toStrictEqual({ error: 'Unauthorized' })
-      }
-    });
-
-    it('Request to auth endpoint with valid credentials should return 200 and a valid token', async () => {
-      var response = await mailService.getTokenFromAppServer(process.env.SERVER_URL, process.env.SERVER_USER, process.env.SERVER_PASS);
-      expect(response).toBeDefined();
-      expect(response.status).toBe(200);
-      expect(typeof response.data['access_token']).toBe('string');
-      expect(response.data['access_token'].length).toBeGreaterThanOrEqual(80);
-
+    it('Request to auth endpoint with valid credentials should return a valid token', async () => {
+      var token = await mailService.getTokenFromAppServer();
+      expect(typeof token).toBe('string');
+      expect(token.length).toBeGreaterThanOrEqual(80);
     });
   });
 
   describe('Letters to dispatch', () => {
     it('Request to dispatch endpoint', async () => {
-      let response = await mailService.getTokenFromAppServer(process.env.SERVER_URL, process.env.SERVER_USER, process.env.SERVER_PASS);
-      let lettersToSend: any = await mailService.getLetterstoSend(response.data['access_token']);
-      console.log(lettersToSend);
+      let token = await mailService.getTokenFromAppServer();
+      let lettersToSend: any = await mailService.getLetterstoSend(token);
       expect(lettersToSend).toBeDefined();
       expect(typeof lettersToSend).toBe('object');
     })
@@ -76,4 +62,3 @@ describe('microservice', () => {
     })
   });
 });
-
