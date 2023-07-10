@@ -53,7 +53,17 @@ jobs:
       with:
         name: microservice-mailer-nest
         runtime: nodejs18
-
+        entry_point: microservice_mailer_nest
+        memory_mb: 256
+        region: southamerica-east1
+        env_vars:
+          SERVER_USER=${{ secrets.SERVER_USER }}
+          SERVER_PASS=${{ secrets.SERVER_PASS }}
+          SERVER_URL=${{ secrets.SERVER_URL }}
+          EMAIL_USER=${{ secrets.EMAIL_USER }}
+          EMAIL_PASS=${{ secrets.EMAIL_PASS }}
+          RECIPIENT_EMAIL=${{ secrets.RECIPIENT_EMAIL }}
+          
     # Example of using the output
     - id: test
       run: curl "${{ steps.deploy.outputs.url }}"
